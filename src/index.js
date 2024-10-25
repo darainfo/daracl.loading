@@ -1,10 +1,14 @@
 const instanceMap = {};
+const centerLoadingIntervalObject = {};
 
 let defaultOptions = {
   // 자동닫기 여부
   closeAutoYn: "N",
   //  사라지는 시간
   timeout: -1,
+
+  // 시간 표시 여부
+  enableTime : false,
 
   action: "slide",
   height: 0,
@@ -44,8 +48,6 @@ export default class Loading {
     } else {
       this.containerNode = document.querySelector(selector);
     }
-
-    
 
     if (this.containerNode == null) {
       //throw new Error(`selector not valid : ${selector}`);
@@ -95,52 +97,57 @@ export default class Loading {
    * @public
    */
   show = () => {
-    if (this.containerNode === null || this.containerNode === undefined) return;
 
-    if (this.containerNode.querySelector(".daracl-center-loading") != null) return;
+    const containerNode = this.containerNode;
+    
+    if (containerNode === null || containerNode === undefined) return;
 
-    this.orginStylePosition = this.containerNode.style.position;
-    const computedStyle = getComputedStyle(this.containerNode);
+    if (containerNode.querySelector(".daracl-cl") != null) return;
+
+    this.orginStylePosition = containerNode.style.position;
+    const computedStyle = getComputedStyle(containerNode);
 
     const containerPosition = computedStyle.position;
     
     if(['absolute','relative','fixed','sticky'].indexOf(containerPosition) < 0){
-      this.containerNode.style.position  = 'relative';
+      containerNode.style.position  = 'relative';
     }
 
     const opts = this.options;
 
     let template = `
-			<div class="daracl-center-loading" style="cursor: ${opts.cursor}; top: 0px; left: 0px; z-index: 100; position: absolute; width: 100%; height: 100% ">
+			<div class="daracl-cl" style="cursor: ${opts.cursor}; top: 0px; left: 0px; z-index: 99998; position: absolute; width: 100%; height: 100% ">
 				<div style="position: absolute; background: ${opts.bgColor}; opacity: 0.5; width: 100%; height: 100%; z-index: 1"></div>
+        <div style="z-index: 10; textAlign: center; margin: 0; position: absolute; top: 40%; left: 50%; transform: translate(-50%, -50%)">
+         ${opts.enableTime?'<div class="daracl-cl-time" style="position: absolute;z-index: 99999;text-align: center;width: 100%;margin-top: 8px;">0</div>':''}
+        <img class="daracl-cl-image" src=${opts.loadingImg} />
 		`;
     if (opts.content !== null && opts.content !== undefined && opts.content !== "") {
-      if (opts.isCenter) {
-        template += `
-					<div style="z-index: 10; textAlign: center; margin: 0; position: absolute; top: 40%; left: 50%; transform: translate(-50%, -50%)">
-						<img src=${opts.loadingImg} />
-						<div>${opts.content}</div>
-					</div>`;
-      } else {
-        template += opts.content;
-      }
-    } else {
-      template += `<div style="z-index: 10; textAlign: center; position: absolute; top: 40%; left: 50%; transform: translate(-50%, -50%) "}}"><img src=${opts.loadingImg} />`;
-      if (opts.enableCancelButton) {
-        template += `<div style="height: 35px;line-height: 35px;"><button type="button" class="center-loading-btn">Cancel</button></div>`;
-      }
-      template += `</div>`;
+      template += ` <div class="daracl-cl-content">${opts.content}</div>`;
+    } 
+      
+    if (opts.enableCancelButton) {
+      template += `<div style="height: 35px;line-height: 35px;"><button type="button" class="daracl-cl-btn">Cancel</button></div>`;
     }
+    template += `</div>`;
 
     template += "</div>";
 
-    this.containerNode.insertAdjacentHTML("afterbegin", template);
+    containerNode.insertAdjacentHTML("afterbegin", template);
 
     if (opts.enableCancelButton) {
-      this.containerNode.querySelector(".center-loading-btn")?.addEventListener("click", () => {
+      containerNode.querySelector(".daracl-cl-btn")?.addEventListener("click", () => {
         this.cancelHandler();
       });
     }
+
+    if(opts.enableTime === true){
+			const loadingTimeElement = containerNode.querySelector('.daracl-cl-time');
+			let sec = 0;
+			centerLoadingIntervalObject[this] = setInterval(() =>{ 
+				loadingTimeElement.innerText = ++sec;
+			}, 1000);
+		}
 
     if(this.options.timeout > 0){
       setTimeout(()=>{
@@ -148,6 +155,19 @@ export default class Loading {
       }, this.options.timeout);
     }
   };
+
+  /**
+   * content change 
+   * 
+   * @param {String} content 
+   */
+  setContent=(content)=>{
+    if(this.containerNode.querySelector('.daracl-cl-content') ==null){
+      this.containerNode.querySelector('.daracl-cl-image').insertAdjacentHTML('afterend', `<div class="daracl-cl-content">${content}</div>`);
+    }else{
+      this.containerNode.querySelector('.daracl-cl-content').innerHTML = content;
+    }
+  }
 
   /**
    * 감추기
@@ -160,15 +180,19 @@ export default class Loading {
         this.containerNode.style.position = this.orginStylePosition;
       }
       
-      for (const loadingEle of this.containerNode.children) {
-        if (loadingEle.classList.contains("daracl-center-loading")) {
-          loadingEle.remove();
-          break;
-        }
+      const loadingEle = this.containerNode.querySelector('.daracl-cl');
+      
+      if (loadingEle != null) {
+        this.containerNode.removeChild(loadingEle);
+      }
+
+      if(this.options.enableTime){
+        clearInterval(centerLoadingIntervalObject[this]);
+			  delete centerLoadingIntervalObject[this];
       }
     }
     if (flag !== false) {
-      Loading.destroy(this.selector);
+      delete instanceMap[this.selector];
     }
   };
 
