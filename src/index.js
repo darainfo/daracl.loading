@@ -4,7 +4,7 @@ let defaultOptions = {
   // 자동닫기 여부
   closeAutoYn: "N",
   //  사라지는 시간
-  timeOut: 1000,
+  timeout: -1,
 
   action: "slide",
   height: 0,
@@ -31,6 +31,8 @@ let defaultOptions = {
   },
 };
 
+
+
 /**
  * Loading message 모듈
  */
@@ -42,6 +44,8 @@ export default class Loading {
     } else {
       this.containerNode = document.querySelector(selector);
     }
+
+    
 
     if (this.containerNode == null) {
       //throw new Error(`selector not valid : ${selector}`);
@@ -70,7 +74,7 @@ export default class Loading {
     defaultOptions = Object.assign({}, defaultOptions, options);
   }
 
-  getSpinLoader = (selector) => {
+  static instance = (selector) => {
     return instanceMap[selector];
   };
 
@@ -95,6 +99,15 @@ export default class Loading {
 
     if (this.containerNode.querySelector(".daracl-center-loading") != null) return;
 
+    this.orginStylePosition = this.containerNode.style.position;
+    const computedStyle = getComputedStyle(this.containerNode);
+
+    const containerPosition = computedStyle.position;
+    
+    if(['absolute','relative','fixed','sticky'].indexOf(containerPosition) < 0){
+      this.containerNode.style.position  = 'relative';
+    }
+
     const opts = this.options;
 
     let template = `
@@ -114,7 +127,7 @@ export default class Loading {
     } else {
       template += `<div style="z-index: 10; textAlign: center; position: absolute; top: 40%; left: 50%; transform: translate(-50%, -50%) "}}"><img src=${opts.loadingImg} />`;
       if (opts.enableCancelButton) {
-        template += `<div style="height: 35px;line-height: 35px; transform: translate(-21%, 0%);"><button type="button" class="center-loading-btn">Cancel</button></div>`;
+        template += `<div style="height: 35px;line-height: 35px;"><button type="button" class="center-loading-btn">Cancel</button></div>`;
       }
       template += `</div>`;
     }
@@ -128,6 +141,12 @@ export default class Loading {
         this.cancelHandler();
       });
     }
+
+    if(this.options.timeout > 0){
+      setTimeout(()=>{
+        this.hide();
+      }, this.options.timeout);
+    }
   };
 
   /**
@@ -135,6 +154,12 @@ export default class Loading {
    */
   hide = (flag) => {
     if (this.containerNode != null) {
+      if(this.orginStylePosition ==''){
+        this.containerNode.style.position = '';
+      }else{
+        this.containerNode.style.position = this.orginStylePosition;
+      }
+      
       for (const loadingEle of this.containerNode.children) {
         if (loadingEle.classList.contains("daracl-center-loading")) {
           loadingEle.remove();
@@ -143,7 +168,7 @@ export default class Loading {
       }
     }
     if (flag !== false) {
-      this.destroy(this.selector);
+      Loading.destroy(this.selector);
     }
   };
 

@@ -11,16 +11,38 @@
 </head>
 
 <body onload="loadingView()">
-
-  <div style="padding-top:80px;">
-    <div class="loading-button">
-      <button type="button" onclick="viewLoading()">Add</button>
-    </div>
-  </div>
-
   <div style="padding:10px">
     <h2>Loading message</h2>
-    <textarea id="loadingMessage" rows="3" style="width:300px;">Loading message</textarea>
+    <table>
+      <tr>
+        <td>
+          <button type="button" onclick="viewLoading(1);">view</button>
+          <button type="button" onclick="Daracl.loading.destroy('#sample1')">hide</button>
+          <div id="sample1" class="loading-area" style="width:300px;height:300px;">default loading</div>
+        </td>
+        <td>
+          <button type="button" onclick='viewLoading(2);'>view</button>
+          <button type="button" onclick="Daracl.loading.destroy('#sample2')">hide</button>
+          <div id="sample2" class="loading-area" style="width:300px;height:300px;">Loading content view</div>
+        </td>
+        <td>
+          <button type="button" onclick='viewLoading(3);'>view</button>
+          <button type="button" onclick="Daracl.loading.destroy('#sample3')">hide</button>
+          <div id="sample3" class="loading-area" style="width:300px;height:300px;">Loading timeout hide</div>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <button type="button" onclick='viewLoading(4);'>view</button>
+          <button type="button" onclick="Daracl.loading.destroy('#sample4')">hide</button>
+          <div id="sample4" class="loading-area" style="width:300px;height:300px;">Loading cancel button</div>
+        </td>
+        <td><div id="sample5" class="loading-area" style="width:300px;height:300px;">Loading message</div></td>
+        <td><div id="sample6" class="loading-area" style="width:300px;height:300px;">Loading message</div></td>
+      </tr>
+    </table>
+    
+    
   </div>
 
 </body>
@@ -28,10 +50,14 @@
 </html>
 
 <style>
-  body {
-    background-color: #34495E;
-  }
 
+  .loading-area {
+    background-color: blue;
+    text-align: center;
+    vertical-align: middle;
+
+  }
+  
   .loading-button button {
     border: none;
     outline: none;
@@ -44,13 +70,36 @@
 </style>
 
 <script>
-  function viewLoading() {
-    loadingObj.show({ text: document.getElementById('loadingMessage').value, style: 'info' })
+  function viewLoading(mode) {
+    if(mode ==1){
+      Daracl.loading.create('#sample1', {})
+      return ; 
+    }
+
+    if(mode ==2){
+      Daracl.loading.create("#sample2",{"content":"content"})
+      return ; 
+    }
+
+    if(mode ==3){
+      Daracl.loading.create("#sample3",{"content":"content", timeout:2000});
+      return ; 
+    }
+
+    if(mode ==4){
+      Daracl.loading.create("#sample4",{"enableCancelButton":true})
+      return ; 
+    }
+    
+    
   }
   var loadingObj;
   function loadingView() {
-    Daracl.loading.create(document.body, {})
-
+    
+    
+    for(var i =1 ;i < 6; i++){
+      viewLoading(i);
+    }
 
 
   }

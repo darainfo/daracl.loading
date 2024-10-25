@@ -1,6 +1,6 @@
 {
   "name": "@daracl/loading",
-  "version": "0.0.7",
+  "version": "0.0.1",
   "sideEffects": false,
   "description": "Daracl Loading Message",
   "author": {
