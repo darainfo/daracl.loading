@@ -29,42 +29,37 @@ npm run build
 
 # 사용방법
 ```
-Daracl.loading.create({ items: [{ text: '한글임 <br/>asdfwef' }],  style: 'success', duration: 3, position: { vertical: 'top', horizontal: 'left' } })
-Daracl.loading.create({ items: ['awseawefawefawefaweff <br/>asdfwef', '한글임한글임한글임ㄴㄴㄴㄴ'], style: 'primary', duration: 10, position: { vertical: 'top', horizontal: 'center' } })
-var loadingObj = Daracl.loading.create({ items: ['awseawefawefawefaweff <br/>asdfwef', 'test'], keepInstance: true, style: 'secondary', duration: 3, position: { vertical: 'top', horizontal: 'right' } })
+ 
+Daracl.loading.create("selector", {})
 
-Daracl.loading.create({ items: ['awseawefawefawefaweff <br/>asdfwef', 'test'], style: 'warning', duration: 10, position: { vertical: 'middle', horizontal: 'left' } })
-Daracl.loading.create({ items: [{ text: 'awseawefawefawefaweff <br/>asdfwef'}, 'test'], style: 'success', duration: 5, position: { vertical: 'middle', horizontal: 'center' } })
-Daracl.loading.create({ items: ['awseawefawefawefaweff <br/>asdfwef', 'test'], style: 'info', duration: 10, position: { vertical: 'middle', horizontal: 'right' } })
+Daracl.loading.create("selector", { "content": "content" })
 
-Daracl.loading.create({ items: ['awseawefawefawefaweff <br/>asdfwef', 'test'], style: 'danger', duration: 10, position: { vertical: 'bottom', horizontal: 'left' } })
-Daracl.loading.create({ items: ['awseawefawefawefaweff <br/>asdfwef', 'test'], style: 'success', duration: 10, position: { vertical: 'bottom', horizontal: 'center' } })
-Daracl.loading.create({ items: [{ text: 'awseawefawefawefaweff <br/>asdfwef', title: 'title', duration:3 }, '한글임한글임한글'], style: 'success', duration: 5000, position: { vertical: 'bottom', horizontal: 'right' } })
+Daracl.loading.create("selector", { "content": "content", timeout: 2000 });
 
+Daracl.loading.create("selector", {
+"enableCancelButton": true, callback: function () {
+    console.log('1111111')
+}
+})
+
+Daracl.loading.create("#sample5", { "enableCancelButton": true, enableTime: true })
+ 
 ```
   
 
 # loading 옵션
 | key | 설명 | 기본값 | 옵션값 |
 |-----|------|-----|-----|
-| duration |  유지 시간(단위 초) |  3 |  |
-| width |  넓이 |  '' |  |
-| position |   위치 |   vertical: 'top' <br> horizontal: 'right'   |  top, middle, bottom <br>  left, center, right
-| enableCloseButton |  닫기 버튼 활성화여부 |  true |  |
-| style |  백그라운드 스타일 |  'success' | 'primary', 'secondary' , 'info' , 'success' , 'warning' , 'danger' |
-| textColor |  글자 색 |  '#000000' | |
-| enableProgress |  프로그래스 바 사용여부 |  true |  |
-| keepInstance |  show 가 끝나도 loading 객체를 유지 <br> loading 객체 하나 생성해서 계속 사용할 경우 사용 |  false | 
-  
+| timeout | 자동으로 사라지는 Milliseconds  | -1 |  |
+| enableTime | 초 보일지 여부 | false |  |
+| content | 보여질 컨텐츠  | "" |  |
+| bgColor | 백그라운드 컬러 | "#ffffff" |  |
+| zIndex | z-index  | 9999998 |  |
+| opacity | opacity | "0.3" |  |
+| loadingImg | 이미지 경로 및 base64 코드  | "" |  |
+| cursor | css cursor  | "wait" |  |
+| enableCancelButton | 취소 버튼 활성화 여부 | false |  |
+| callback | 취소 벼튼 활성화시  callback 메소드 | undefined |  |
 
-
-# loading item 옵션
-| key | 설명 | 기본값 | 옵션값 |
-|-----|------|-----|-----|
-| title |  제목 |  '' |  |
-| enableCloseButton |  닫기 버튼 활성화여부 |  true |  |
-| style |  백그라운드 스타일 |  'success' | 'primary', 'secondary' , 'info' , 'success' , 'warning' , 'danger' |
-| textColor |  글자 색 |  '#000000' | |
-| enableProgress |  프로그래스 바 사용여부 |  true | |
 
 ```

@@ -12,7 +12,7 @@
 
 <body onload="loadingView()">
   <div style="padding:10px">
-    <h2>Loading message</h2>
+    <h2>Loading</h2>
     <table>
       <tr>
         <td>
@@ -40,13 +40,15 @@
         <td>
           <button type="button" onclick='viewLoading(5);'>view</button>
           <button type="button" onclick="Daracl.loading.destroy('#sample5')">hide</button>
-          <div id="sample5" class="loading-area" style="width:300px;height:300px;">Loading message</div>
+          <div id="sample5" class="loading-area" style="width:300px;height:300px;">Loading second view</div>
         </td>
-        <td><div id="sample6" class="loading-area" style="width:300px;height:300px;">Loading message</div></td>
+        <td>
+          <div id="sample6" class="loading-area" style="width:300px;height:300px;">Loading message</div>
+        </td>
       </tr>
     </table>
-    
-    
+
+
   </div>
 
 </body>
@@ -54,14 +56,13 @@
 </html>
 
 <style>
-
   .loading-area {
-    background-color: blue;
+    background-color: #c8c8ff;
     text-align: center;
     vertical-align: middle;
 
   }
-  
+
   .loading-button button {
     border: none;
     outline: none;
@@ -75,40 +76,42 @@
 
 <script>
   function viewLoading(mode) {
-    if(mode ==1){
+    if (mode == 1) {
       Daracl.loading.create('#sample1', {})
-      return ; 
+      return;
     }
 
-    if(mode ==2){
-      Daracl.loading.create("#sample2",{"content":"content"})
-      return ; 
+    if (mode == 2) {
+      Daracl.loading.create("#sample2", { "content": "content" })
+      return;
     }
 
-    if(mode ==3){
-      Daracl.loading.create("#sample3",{"content":"content", timeout:2000});
-      return ; 
+    if (mode == 3) {
+      Daracl.loading.create("#sample3", { "content": "content", timeout: 2000 });
+      return;
     }
 
-    if(mode ==4){
-      Daracl.loading.create("#sample4",{"enableCancelButton":true, callback: function (){
-        console.log('1111111')
-      }})
-      return ; 
+    if (mode == 4) {
+      Daracl.loading.create("#sample4", {
+        "enableCancelButton": true, callback: function () {
+          console.log('1111111')
+        }
+      })
+      return;
     }
 
-    if(mode ==5){
-      Daracl.loading.create("#sample5",{"enableCancelButton":true, enableTime:true})
-      return ; 
+    if (mode == 5) {
+      Daracl.loading.create("#sample5", { "enableCancelButton": true, enableTime: true })
+      return;
     }
-    
-    
+
+
   }
   var loadingObj;
   function loadingView() {
-    
-    
-    for(var i =1 ;i < 6; i++){
+
+
+    for (var i = 1; i < 6; i++) {
       viewLoading(i);
     }
 
